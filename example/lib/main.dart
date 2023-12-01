@@ -45,26 +45,29 @@ class MyApp extends StatelessWidget {
               title: Text('BoolPrefNotifier ${ref.watch(booPrefProvider)}'),
               value: ref.watch(booPrefProvider),
               onChanged: (v) async {
-                if (v != null)
-                  await ref.read(booPrefProvider.notifier).update(v);
+                if (v != null) {
+                  await ref.read(booPrefProvider.notifier).update((v) => v);
+                }
               },
             ),
             RadioListTile(
-              title: Text('${EnumValues.foo.toString()}'),
+              title: Text(EnumValues.foo.toString()),
               value: EnumValues.foo,
               groupValue: ref.watch(enumPrefProvider),
               onChanged: (EnumValues? v) async {
-                if (v != null)
-                  await ref.read(enumPrefProvider.notifier).update(v);
+                if (v != null) {
+                  await ref.read(enumPrefProvider.notifier).update((v) => v);
+                }
               },
             ),
             RadioListTile(
-              title: Text('${EnumValues.bar.toString()}'),
+              title: Text(EnumValues.bar.toString()),
               value: EnumValues.bar,
               groupValue: ref.watch(enumPrefProvider),
               onChanged: (EnumValues? v) async {
-                if (v != null)
-                  await ref.read(enumPrefProvider.notifier).update(v);
+                if (v != null) {
+                  await ref.read(enumPrefProvider.notifier).update((v) => v);
+                }
               },
             ),
           ]);

@@ -22,7 +22,7 @@ class PrefNotifier<T> extends StateNotifier<T> {
   T defaultValue;
 
   /// Updates the value asynchronously.
-  Future<void> update(T Function(T) updater) async {
+  Future<T> update(T Function(T) updater) async {
     final value = updater(state);
     if (value is String) {
       await prefs.setString(prefKey, value);
@@ -36,6 +36,7 @@ class PrefNotifier<T> extends StateNotifier<T> {
       await prefs.setStringList(prefKey, value);
     }
     super.state = value;
+    return value;
   }
 
   /// Do not use the setter for state.
@@ -45,7 +46,7 @@ class PrefNotifier<T> extends StateNotifier<T> {
     assert(false,
         "Don't use the setter for state. Instead use `await update(value)`.");
     Future(() async {
-      await update(value);
+      await update((value) => value);
     });
   }
 }
@@ -118,9 +119,11 @@ class MapPrefNotifier<T> extends StateNotifier<T> {
   String Function(T) mapTo;
 
   /// Updates the value asynchronously.
-  Future<void> update(T value) async {
-    await prefs.setString(prefKey, mapTo(value));
-    super.state = value;
+  Future<T> update(T Function(T) updater) async {
+    final nv = updater(state);
+    await prefs.setString(prefKey, mapTo(nv));
+    super.state = nv;
+    return nv;
   }
 
   /// Do not use the setter for state.
@@ -128,9 +131,9 @@ class MapPrefNotifier<T> extends StateNotifier<T> {
   @override
   set state(T value) {
     assert(false,
-        "Don\'t use the setter for state. Instead use `await update(value)`.");
+        "Don't use the setter for state. Instead use `await update(value)`.");
     Future(() async {
-      await update(value);
+      await update((value) => value);
     });
   }
 }
