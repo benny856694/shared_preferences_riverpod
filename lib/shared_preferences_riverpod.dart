@@ -22,7 +22,8 @@ class PrefNotifier<T> extends StateNotifier<T> {
   T defaultValue;
 
   /// Updates the value asynchronously.
-  Future<void> update(T value) async {
+  Future<void> update(T Function(T) updater) async {
+    final value = updater(state);
     if (value is String) {
       await prefs.setString(prefKey, value);
     } else if (value is bool) {
